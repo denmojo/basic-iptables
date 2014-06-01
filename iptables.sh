@@ -3,6 +3,7 @@ iptables -A INPUT -i eth0 -p tcp --dport 443 -j ACCEPT
 iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
 
 iptables -A INPUT  -p tcp --sport 21 -m state --state NEW,ESTABLISHED -j ACCEPT -m comment --comment "Allow ftp in for pkg updates"
+iptables -A INPUT  -p tcp --sport 22 -m state --state NEW,ESTABLISHED -j ACCEPT -m comment --comment "Allow ssh initiated from inside"
 iptables -A INPUT  -p tcp --sport 80 -m state --state NEW,ESTABLISHED -j ACCEPT -m comment --comment "Allow outbound wget"
 
 iptables -A INPUT -i eth1 -p tcp -j ACCEPT
