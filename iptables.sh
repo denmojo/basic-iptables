@@ -2,9 +2,9 @@ iptables --flush
 iptables -A INPUT -i eth0 -p tcp --dport [SSHPORT] -j ACCEPT -m comment --comment "custom ssh port"
 # Drop excess of 15 connections per 60 seconds to web ports
 iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW -m recent --set
-iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW -m recent --update --seconds 60 --hitcount 15 -j DROP -m comment --comment "Throttle 15/min http"
+iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW -m recent --update --seconds 60 --hitcount 15 -j LOGGING -m comment --comment "Throttle 15/min http"
 iptables -A INPUT -i eth0 -p tcp --dport 443 -m state --state NEW -m recent --set
-iptables -A INPUT -i eth0 -p tcp --dport 443 -m state --state NEW -m recent --update --seconds 60 --hitcount 15 -j DROP -m comment --comment "Throttle 15/min https"
+iptables -A INPUT -i eth0 -p tcp --dport 443 -m state --state NEW -m recent --update --seconds 60 --hitcount 15 -j LOGGING -m comment --comment "Throttle 15/min https"
 iptables -A INPUT -i eth0 -p tcp --dport 443 -j ACCEPT
 iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
 
