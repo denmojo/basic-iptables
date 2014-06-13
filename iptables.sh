@@ -1,5 +1,10 @@
 iptables --flush
-iptables -A INPUT -i eth0 -p tcp --dport [SSHPORT] -j ACCEPT -m comment --comment "custom ssh port"
+iptables -N LOGGING
+# Any bans go here first
+
+# It is good to configure sshd on a different port otherwise ignore
+# iptables -A INPUT -i eth0 -p tcp --dport [SSHPORT] -j ACCEPT -m comment --comment "custom ssh port"
+
 # Drop excess of 15 connections per 60 seconds to web ports
 iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW -m recent --set
 iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW -m recent --update --seconds 60 --hitcount 15 -j LOGGING -m comment --comment "Throttle 15/min http"
@@ -40,7 +45,6 @@ iptables -A INPUT -i eth0 -p icmp --icmp-type 8 -s 0/0 -m state --state NEW,ESTA
 CMP"
 iptables -A OUTPUT -o eth0 -p icmp --icmp-type 0 -d 0/0 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-iptables -N LOGGING
 iptables -A INPUT -j LOGGING
 iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables Packet Dropped: " --log-level 7
 iptables -A LOGGING -j DROP
